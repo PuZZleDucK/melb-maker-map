@@ -6,7 +6,7 @@
 
 "use strict";
 
-(function ($){
+(function ($) {
     /**
      * Parse Application ID
      */
@@ -20,14 +20,14 @@
      * Storage objects
      */
     var makersLayer;
-    var map, layer, infoWindow;
+    var map, infoWindow;
 
     /**
      * Window rendering handler.
      */
-    function render () {
-        var $map    = $('#map-wrapper');
-        var calc    = $(window).height() - $map.position().top;
+    function render() {
+        var $map = $('#map-wrapper');
+        var calc = $(window).height() - $map.position().top;
 
         $map.css('height', calc + 'px');
     }
@@ -52,12 +52,12 @@
      *
      * @return {void}
      */
-    function updateAnyCheckbox (e) {
+    function updateAnyCheckbox(e) {
         var $target = $(e.target);
-        var $boxen  = $('#filter').find('input.classification-filter[type="checkbox"]').not('[value="any"]');
-        var $any    = $('#filter').find('input.classification-filter[value="any"]');
+        var $boxen = $('#filter').find('input.classification-filter[type="checkbox"]').not('[value="any"]');
+        var $any = $('#filter').find('input.classification-filter[value="any"]');
 
-        if ($target.val() == 'any') {
+        if ($target.val() === 'any') {
             // Update other checkboxes based on "any" state
             if ($any.is(':checked')) {
                 $boxen.prop('checked', 'checked');
@@ -77,7 +77,7 @@
     /**
      * Google Maps
      */
-    function initMaps () {
+    function initMaps() {
         map = new google.maps.Map(document.getElementById('map-canvas'), {
             center: new google.maps.LatLng(-37.8136, 144.9631),
             zoom: 9,
@@ -94,21 +94,21 @@
             {
                 elementType: 'geometry',
                 stylers: [
-                    { saturation: -100 },
-                    { weight: 0.4 }
+                    {saturation: -100},
+                    {weight: 0.4}
                 ]
             },
             {
                 featureType: 'poi',
                 stylers: [
-                    { visibility: "off" }
+                    {visibility: "off"}
                 ]
             },
             {
                 featureType: 'administrative.land_parcel',
                 elementType: 'all',
                 stylers: [
-                    { visibility: 'off' }
+                    {visibility: 'off'}
                 ]
             }
         ];
@@ -128,7 +128,7 @@
         loadData();
 
         if (navigator && navigator.geolocation) {
-           locateMe();
+            locateMe();
         }
     }
 
@@ -136,21 +136,21 @@
      * Centers the map to the user's geolocated position
      */
     function locateMe () {
-        navigator.geolocation.getCurrentPosition(function(position) {
+        navigator.geolocation.getCurrentPosition(function (position) {
             var latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
             map.setCenter(latlng);
             map.setZoom(12);
 
-            $('.locateMe').fadeIn(1000,function(){
+            $('.locateMe').fadeIn(1000, function() {
                 $(this).tooltip('show');
-            }).css("display",'table');
+            }).css("display", 'table');
         });
-        $('.locateMe').click(function(){
+        $('.locateMe').click(function() {
             locateMe();
         });
     }
 
-    function resetForm ($form) {
+    function resetForm($form) {
         //TODO: Clear form fields
         $form.find("input").val("");
         $form.find("textarea").val("");
@@ -159,7 +159,7 @@
     /**
      *
      */
-    function submitNewAsset () {
+    function submitNewAsset() {
         showBusyIndicator();
         var asset = new MakerMap.Model.Asset();
         asset.set("title", $("#asset_title").val());
@@ -177,15 +177,17 @@
 
         asset.set("material_type", mt);
 
-        asset.set("coordinates", new Parse.GeoPoint({ longitude: parseFloat($("#asset_longitude").val()), latitude: parseFloat($("#asset_latitude").val()) }));
+        asset.set("coordinates", new Parse.GeoPoint({longitude: parseFloat($("#asset_longitude").val()), latitude: parseFloat($("#asset_latitude").val())}));
         asset.save(null, {
             success: function (resp) {
+                console.log(resp);
                 alert("New resource saved");
                 resetForm($("#newAsset"));
                 hideBusyIndicator();
                 loadData();
             },
             error: function (resp, error) {
+                console.log(resp);
                 alert("Error saving new resource: " + error);
                 hideBusyIndicator();
             }
@@ -195,7 +197,7 @@
     /**
      *
      */
-    function submitNewMaker () {
+    function submitNewMaker() {
         showBusyIndicator();
         var maker = new MakerMap.Model.Maker();
         maker.set("title", $("#maker_title").val());
@@ -217,22 +219,24 @@
         maker.set("owner_name", $("#maker_contributor").val());
         maker.set("is_supplier", $("#maker_supplier").is(":checked"));
 
-        maker.set("coordinates", new Parse.GeoPoint({ longitude: parseFloat($("#maker_longitude").val()), latitude: parseFloat($("#maker_latitude").val()) }));
+        maker.set("coordinates", new Parse.GeoPoint({longitude: parseFloat($("#maker_longitude").val()), latitude: parseFloat($("#maker_latitude").val())}));
         maker.save(null, {
             success: function (resp) {
+                console.log(resp);
                 alert("New maker saved");
                 resetForm($("#newMaker"));
                 hideBusyIndicator();
                 loadData();
             },
             error: function (resp, error) {
+                console.log(resp);
                 alert("Error saving new maker: " + error);
                 hideBusyIndicator();
             }
         });
     }
 
-    function initLookups () {
+    function initLookups() {
         var bTypes = $("#maker_business_type");
         var mtTypes = $("#asset_material_type");
         var clsList = $("#maker_classification");
@@ -275,7 +279,7 @@
                     mtTypes.append("<option value='" + mt.id + "'>" + mt.get("name") + "</option>");
                 });
             },
-            failure: function (err) {
+            failure: function (error) {
                 alert("An error occurred loading material types: " + error);
             }
         });
@@ -289,7 +293,7 @@
                     btBusy.remove();
                 });
             },
-            failure: function (err) {
+            failure: function (error) {
                 alert("An error occurred loading business types: " + error);
                 btBusy.remove();
             }
@@ -299,16 +303,15 @@
     /**
      * UI events
      */
-    function initEventListeners () {
+    function initEventListeners() {
         // Selectors
-        var $searchNav  = $('#search-nav');
+        var $searchNav = $('#search-nav');
         var $addContentNav = $('.addContent');
         var $addResourceNav = $('.addResource');
         var $aboutNav = $('#about-nav');
         var $window = $(window);
-        var $nav    = $('#topn  v a');
+        var $nav = $('#topn  v a');
         var $search = $('#search');
-        var $filter = $('#filter');
         var $newMakerForm = $('#newMaker');
         var $newAssetForm = $('#newAsset');
 
@@ -317,10 +320,10 @@
 
         // Top nav
         $.hovertips($nav, {
-            delay_hide:     0,
-            delay_hover:    0,
-            delay_leave:    0,
-            render: function ($el, data, loading) {
+            delay_hide: 0,
+            delay_hover: 0,
+            delay_leave: 0,
+            render: function ($el) {
                 var $tooltip;
                 var self = this;
                 $tooltip = $('<div>');
@@ -397,19 +400,19 @@
         });
     }
 
-    function filterMenu () {
-        $('.filterIcon').click(function (){
+    function filterMenu() {
+        $('.filterIcon').click(function () {
             $('.filterWrap').slideToggle();
         });
     }
 
-    function mobileMenu () {
+    function mobileMenu() {
         $('.menuToggle').click(function (){
             $('.aboutWrap').slideToggle();
         });
     }
 
-    function initSocialite () {
+    function initSocialite() {
         Socialite.load($('div.footer'));
     }
 
@@ -417,9 +420,9 @@
      * Converts a Maker Parse instance to a google.maps.Data.Feature instance
      * for placement on a map
      */
-    function makerToFeature (mkr) {
+    function makerToFeature(mkr) {
         var coords = mkr.get("coordinates").toJSON();
-        if(mkr.get("classification")) {
+        if (mkr.get("classification")) {
             var marker_classification_symbol = mkr.get("classification").get("name");
         }
         var obj = {
@@ -440,26 +443,25 @@
         return new google.maps.Data.Feature(obj);
     }
 
-    function getIcon (symbolName) {
-        if (!symbolName || symbolName == "") {
+    function getIcon(symbolName) {
+        if (!symbolName || symbolName === "") {
             return null;
         }
         var relPart = "img/markers/" + symbolName + ".png";
         //HACK: Should be a better way to get the URL base of index.html
         if (window.location.pathname.indexOf("index.html") >= 0) {
             return window.location.pathname.replace("index.html", relPart);
-        }
-        else {
+        } else {
             return relPart;
         }
     }
 
-    function showBusyIndicator () {
+    function showBusyIndicator() {
         $("#mainBusy").show();
         $(".header-img").hide();
     }
 
-    function hideBusyIndicator () {
+    function hideBusyIndicator() {
         $("#mainBusy").hide();
         $(".header-img").show();
     }
@@ -467,7 +469,7 @@
     /**
      * Reload the markers on the map based on the current search and filtering criteria
      */
-    function loadData () {
+    function loadData() {
         showBusyIndicator();
 
         var query_array = [];
@@ -489,7 +491,7 @@
         });
 
         var search_string = $('#search').find('input').val();
-        if(search_string != "") {
+        if (search_string !== "") {
             var maker_title_query = new Parse.Query(MakerMap.Model.Maker);
             var maker_description_query = new Parse.Query(MakerMap.Model.Maker);
 
@@ -504,7 +506,7 @@
             asset_query = Parse.Query.or(asset_title_query, asset_description_query);
         }
 
-        if($('#filter').find('input.classification-filter[value="any"]:checked').length == 0) {
+        if ($('#filter').find('input.classification-filter[value="any"]:checked').length === 0) {
             $('#filter').find('input.classification-filter[type="checkbox"]:checked').each(function () {
                 query_array.push($(this).attr('value'));
             });
@@ -533,7 +535,7 @@
         asset_query.find({
             success: function (resp) {
 //                for (var i = 0; i < resp.length; i++) {
-                resp.forEach(function(x) {
+                resp.forEach(function (x) {
                     makersLayer.add(makerToFeature(x));
                 });
                 makersLayer.setMap(map);
@@ -550,22 +552,22 @@
     function setupEventListeners() {
         makersLayer.addListener('click', function (event) {
             var website_description = "";
-            if(event.feature.getProperty('website')) {
-                website_description = '<div class="map-website"><p>Website: <a href="'+event.feature.getProperty('website')+'">'+event.feature.getProperty('website')+'</a></p></div>';
+            if (event.feature.getProperty('website')) {
+                website_description = '<div class="map-website"><p>Website: <a href="' + event.feature.getProperty('website') + '">' + event.feature.getProperty('website') + '</a></p></div>';
             }
             infoWindow.setContent(
-                '<div class="mapDescription"><h3>'+event.feature.getProperty('title')+'</h3>'+
-                '<p>'+event.feature.getProperty('description')+'</p>'+
+                '<div class="mapDescription"><h3>' + event.feature.getProperty('title') + '</h3>' +
+                '<p>' + event.feature.getProperty('description') + '</p>' +
                 '<p>' + website_description + '</p>' +
                 '</div>'
             );
             var anchor = new google.maps.MVCObject();
-            anchor.set("position",event.latLng);
-            infoWindow.open(map,anchor);
+            anchor.set("position", event.latLng);
+            infoWindow.open(map, anchor);
             map.setCenter(event.latLng);
             map.setZoom(12);
         });
-    };
+    }
 
     //Init the parse API
     Parse.initialize(PARSE_APP_ID, PARSE_JS_ID);
@@ -581,7 +583,7 @@
     $('.addResourceMenu').hide();
     initSocialite();
 
-    $(document).ready(function (){
+    $(document).ready(function () {
         $('#maker_address').geocomplete({
             map: map,
             details: ".maker-coordinates",
