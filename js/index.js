@@ -4,6 +4,8 @@
  * @package themakermap
  */
 
+/*global window, document, google, navigator, MakerMap, Parse, console, alert, jQuery, Socialite */
+
 "use strict";
 
 (function ($) {
@@ -135,17 +137,17 @@
     /**
      * Centers the map to the user's geolocated position
      */
-    function locateMe () {
+    function locateMe() {
         navigator.geolocation.getCurrentPosition(function (position) {
             var latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
             map.setCenter(latlng);
             map.setZoom(12);
 
-            $('.locateMe').fadeIn(1000, function() {
+            $('.locateMe').fadeIn(1000, function () {
                 $(this).tooltip('show');
             }).css("display", 'table');
         });
-        $('.locateMe').click(function() {
+        $('.locateMe').click(function () {
             locateMe();
         });
     }
@@ -407,7 +409,7 @@
     }
 
     function mobileMenu() {
-        $('.menuToggle').click(function (){
+        $('.menuToggle').click(function () {
             $('.aboutWrap').slideToggle();
         });
     }
@@ -555,12 +557,11 @@
             if (event.feature.getProperty('website')) {
                 website_description = '<div class="map-website"><p>Website: <a href="' + event.feature.getProperty('website') + '">' + event.feature.getProperty('website') + '</a></p></div>';
             }
-            infoWindow.setContent(
-                '<div class="mapDescription"><h3>' + event.feature.getProperty('title') + '</h3>' +
-                '<p>' + event.feature.getProperty('description') + '</p>' +
-                '<p>' + website_description + '</p>' +
-                '</div>'
-            );
+            infoWindow.setContent('<div class="mapDescription">'
+                    + '<h3>' + event.feature.getProperty('title') + '</h3>' +
+                    +'<p>' + event.feature.getProperty('description') + '</p>' +
+                    +'<p>' + website_description + '</p>'
+                    + '</div>');
             var anchor = new google.maps.MVCObject();
             anchor.set("position", event.latLng);
             infoWindow.open(map, anchor);
