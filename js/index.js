@@ -4,6 +4,8 @@
  * @package themakermap
  */
 
+"use strict"
+
 (function($){
     /**
      * Parse Application ID
@@ -29,7 +31,7 @@
 
         $map.css('height', calc + 'px');
     }
-    
+
     /**
      * Strips all HTML tags from the given string
      * 
@@ -138,7 +140,7 @@
             var latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
             map.setCenter(latlng);
             map.setZoom(12);
-    
+
             $('.locateMe').fadeIn(1000,function(){
                 $(this).tooltip('show');
             }).css("display",'table');
@@ -147,15 +149,15 @@
             locateMe();
         });
     }
-    
+
     function resetForm($form) {
         //TODO: Clear form fields
         $form.find("input").val("");
         $form.find("textarea").val("");
     }
-    
+
     /**
-     * 
+     *
      */
     function submitNewAsset() {
         showBusyIndicator();
@@ -169,12 +171,12 @@
         //asset.set("contact", $("#asset_contact").val());
         asset.set("owner_name", $("#asset_contributor").val());
         asset.set("is_supplier", $("#asset_supplier").is(":checked"));
-        
+
         var mt = new MakerMap.Model.MaterialType();
         mt.id = $("#asset_material_type").val();
-        
+
         asset.set("material_type", mt);
-        
+
         asset.set("coordinates", new Parse.GeoPoint({ longitude: parseFloat($("#asset_longitude").val()), latitude: parseFloat($("#asset_latitude").val()) }));
         asset.save(null, {
             success: function(resp) {
@@ -189,7 +191,7 @@
             }
         });
     }
-    
+
     /**
      * 
      */
@@ -198,15 +200,15 @@
         var maker = new MakerMap.Model.Maker();
         maker.set("title", $("#maker_title").val());
         maker.set("description", $("#maker_description").val());
-        
+
         var cls = new MakerMap.Model.PrimaryClassification();
         cls.id = $("#maker_classification").val();
-        
+
         var bt = new MakerMap.Model.BusinessType();
         bt.id = $("#maker_business_type").val();
-        
+
         maker.set("classification", cls);
-        
+
         maker.set("business_type", bt);
         maker.set("business_hours", $("#maker_businessHours").val());
         maker.set("phone", $("#maker_phone").val());
@@ -214,7 +216,7 @@
         maker.set("website", $("#maker_website").val());
         maker.set("owner_name", $("#maker_contributor").val());
         maker.set("is_supplier", $("#maker_supplier").is(":checked"));
-        
+
         maker.set("coordinates", new Parse.GeoPoint({ longitude: parseFloat($("#maker_longitude").val()), latitude: parseFloat($("#maker_latitude").val()) }));
         maker.save(null, {
             success: function(resp) {
@@ -238,7 +240,7 @@
         // Load classifications
         var listBusy = $("<li><label><i class='fa fa-refresh fa-spin'></i> Loading Classifications ...</label></li>");
         listBusy.appendTo(filterList);
-        
+
         var btBusy = $("<li><label><i class='fa fa-refresh fa-spin'></i> Loading Business Types ...</label></li>");
         btBusy.appendTo(filterList);
         var classQry = new Parse.Query(MakerMap.Model.PrimaryClassification);
@@ -249,13 +251,13 @@
                     filterList.append("<li><label><img width='16' height='16' src='" + getIcon(cls.get("name")) + "' /> " + cls.get("friendlyName") + " <input type='checkbox' class='classification-filter' value='" + cls.id + "' /></label></li>");
                     clsList.append("<option value='" + cls.id + "'>" + cls.get("friendlyName") + "</option>")
                 }
-                
+
                 // Filter
                 filterList.find('input.classification-filter').click(function (e) {
                     updateAnyCheckbox(e);
                     loadData();
                 });
-                
+
                 listBusy.remove();
             },
             failure: function(err) {
@@ -263,7 +265,7 @@
                 listBusy.remove();
             }
         });
-        
+
         var mtQuery = new Parse.Query(MakerMap.Model.MaterialType);
         mtQuery.find({
             success: function(resp) {
@@ -276,7 +278,7 @@
                 alert("An error occurred loading material types: " + error);
             }
         });
-        
+
         var btQuery = new Parse.Query(MakerMap.Model.BusinessType);
         btQuery.find({
             success: function(resp) {
@@ -371,17 +373,17 @@
             $('.addContentMenu').hide();
             makersLayer.setMap(map);
         });
-        
+
         $newMakerForm.submit(function() {
             submitNewMaker();
             return false;
         });
-        
+
         $newAssetForm.submit(function() {
             submitNewAsset();
             return false;
         })
-        
+
         initLookups();
 
         // Search
@@ -399,7 +401,7 @@
             $('.filterWrap').slideToggle();
         });
     }
-    
+
     function mobileMenu() {
         $('.menuToggle').click(function(){
             $('.aboutWrap').slideToggle();
@@ -436,7 +438,7 @@
         };
         return new google.maps.Data.Feature(obj);
     }
-    
+
     function getIcon(symbolName) {
         if (!symbolName || symbolName == "") {
             return null;
@@ -448,12 +450,12 @@
         else
             return relPart;
     }
-    
+
     function showBusyIndicator() {
         $("#mainBusy").show();
         $(".header-img").hide();
     }
-    
+
     function hideBusyIndicator() {
         $("#mainBusy").hide();
         $(".header-img").show();
@@ -464,7 +466,7 @@
      */
     function loadData() {
         showBusyIndicator();
-        
+
         var query_array = [];
         var maker_query = new Parse.Query(MakerMap.Model.Maker);
         var asset_query = new Parse.Query(MakerMap.Model.Asset);
@@ -498,7 +500,7 @@
             maker_query = Parse.Query.or(maker_title_query, maker_description_query);
             asset_query = Parse.Query.or(asset_title_query, asset_description_query);
         }
-        
+
         if($('#filter').find('input.classification-filter[value="any"]:checked').length == 0) {
             $('#filter').find('input.classification-filter[type="checkbox"]:checked').each(function () {
                 query_array.push($(this).attr('value'));
@@ -573,7 +575,7 @@
     $('.aboutMenu').hide();
     $('.addResourceMenu').hide();
     initSocialite();
-    
+
     $(document).ready(function(){
         $('#maker_address').geocomplete({
             map: map,
@@ -587,3 +589,4 @@
         });
     });
 })(jQuery);
+
