@@ -4,9 +4,9 @@
  * @package themakermap
  */
 
-"use strict"
+"use strict";
 
-(function($){
+(function ($){
     /**
      * Parse Application ID
      */
@@ -34,9 +34,9 @@
 
     /**
      * Strips all HTML tags from the given string
-     * 
+     *
      * @param {String} dirtyString
-     * 
+     *
      * @return {String}
      */
     function stripHTML(dirtyString) {
@@ -150,7 +150,7 @@
         });
     }
 
-    function resetForm($form) {
+    function resetForm ($form) {
         //TODO: Clear form fields
         $form.find("input").val("");
         $form.find("textarea").val("");
@@ -159,7 +159,7 @@
     /**
      *
      */
-    function submitNewAsset() {
+    function submitNewAsset () {
         showBusyIndicator();
         var asset = new MakerMap.Model.Asset();
         asset.set("title", $("#asset_title").val());
@@ -179,13 +179,13 @@
 
         asset.set("coordinates", new Parse.GeoPoint({ longitude: parseFloat($("#asset_longitude").val()), latitude: parseFloat($("#asset_latitude").val()) }));
         asset.save(null, {
-            success: function(resp) {
+            success: function (resp) {
                 alert("New resource saved");
                 resetForm($("#newAsset"));
                 hideBusyIndicator();
                 loadData();
             },
-            error: function(resp, error) {
+            error: function (resp, error) {
                 alert("Error saving new resource: " + error);
                 hideBusyIndicator();
             }
@@ -195,7 +195,7 @@
     /**
      * 
      */
-    function submitNewMaker() {
+    function submitNewMaker () {
         showBusyIndicator();
         var maker = new MakerMap.Model.Maker();
         maker.set("title", $("#maker_title").val());
@@ -219,20 +219,20 @@
 
         maker.set("coordinates", new Parse.GeoPoint({ longitude: parseFloat($("#maker_longitude").val()), latitude: parseFloat($("#maker_latitude").val()) }));
         maker.save(null, {
-            success: function(resp) {
+            success: function (resp) {
                 alert("New maker saved");
                 resetForm($("#newMaker"));
                 hideBusyIndicator();
                 loadData();
             },
-            error: function(resp, error) {
+            error: function (resp, error) {
                 alert("Error saving new maker: " + error);
                 hideBusyIndicator();
             }
         });
     }
 
-    function initLookups() {
+    function initLookups () {
         var bTypes = $("#maker_business_type");
         var mtTypes = $("#asset_material_type");
         var clsList = $("#maker_classification");
@@ -245,7 +245,7 @@
         btBusy.appendTo(filterList);
         var classQry = new Parse.Query(MakerMap.Model.PrimaryClassification);
         classQry.find({
-            success: function(resp) {
+            success: function (resp) {
                 for (var i = 0; i < resp.length; i++) {
                     var cls = resp[i];
                     filterList.append("<li><label><img width='16' height='16' src='" + getIcon(cls.get("name")) + "' /> " + cls.get("friendlyName") + " <input type='checkbox' class='classification-filter' value='" + cls.id + "' /></label></li>");
@@ -260,7 +260,7 @@
 
                 listBusy.remove();
             },
-            failure: function(err) {
+            failure: function (err) {
                 alert("An error occurred loading primary classifications: " + err);
                 listBusy.remove();
             }
@@ -268,27 +268,27 @@
 
         var mtQuery = new Parse.Query(MakerMap.Model.MaterialType);
         mtQuery.find({
-            success: function(resp) {
+            success: function (resp) {
                 for (var i = 0; i < resp.length; i++) {
                     var mt = resp[i];
                     mtTypes.append("<option value='" + mt.id + "'>" + mt.get("name") + "</option>");
                 }
             },
-            failure: function(err) {
+            failure: function (err) {
                 alert("An error occurred loading material types: " + error);
             }
         });
 
         var btQuery = new Parse.Query(MakerMap.Model.BusinessType);
         btQuery.find({
-            success: function(resp) {
+            success: function (resp) {
                 for (var i = 0; i < resp.length; i++) {
                     var bt = resp[i];
                     bTypes.append("<option value='" + bt.id + "'>" + bt.get("name") + "</option>");
                     btBusy.remove();
                 }
             },
-            failure: function(err) {
+            failure: function (err) {
                 alert("An error occurred loading business types: " + error);
                 btBusy.remove();
             }
@@ -319,13 +319,13 @@
             delay_hide:     0,
             delay_hover:    0,
             delay_leave:    0,
-            render: function($el, data, loading) {
+            render: function ($el, data, loading) {
                 var $tooltip;
                 var self = this;
                 $tooltip = $('<div>');
                 $tooltip.addClass('nav-tooltip')
                 $tooltip.html($el.find('img').attr('alt'));
-                $el.on('click', function() {
+                $el.on('click', function () {
                     self.hide(0);
                 });
                 return $tooltip;
@@ -374,12 +374,12 @@
             makersLayer.setMap(map);
         });
 
-        $newMakerForm.submit(function() {
+        $newMakerForm.submit(function () {
             submitNewMaker();
             return false;
         });
 
-        $newAssetForm.submit(function() {
+        $newAssetForm.submit(function () {
             submitNewAsset();
             return false;
         })
@@ -396,19 +396,19 @@
         });
     }
 
-    function filterMenu() {
-        $('.filterIcon').click(function(){
+    function filterMenu () {
+        $('.filterIcon').click(function (){
             $('.filterWrap').slideToggle();
         });
     }
 
-    function mobileMenu() {
-        $('.menuToggle').click(function(){
+    function mobileMenu () {
+        $('.menuToggle').click(function (){
             $('.aboutWrap').slideToggle();
         });
     }
 
-    function initSocialite() {
+    function initSocialite () {
         Socialite.load($('div.footer'));
     }
 
@@ -416,7 +416,7 @@
      * Converts a Maker Parse instance to a google.maps.Data.Feature instance
      * for placement on a map
      */
-    function makerToFeature(mkr) {
+    function makerToFeature (mkr) {
         var coords = mkr.get("coordinates").toJSON();
         if(mkr.get("classification")) {
             var marker_classification_symbol = mkr.get("classification").get("name")            
@@ -439,7 +439,7 @@
         return new google.maps.Data.Feature(obj);
     }
 
-    function getIcon(symbolName) {
+    function getIcon (symbolName) {
         if (!symbolName || symbolName == "") {
             return null;
         }
@@ -451,12 +451,12 @@
             return relPart;
     }
 
-    function showBusyIndicator() {
+    function showBusyIndicator () {
         $("#mainBusy").show();
         $(".header-img").hide();
     }
 
-    function hideBusyIndicator() {
+    function hideBusyIndicator () {
         $("#mainBusy").hide();
         $(".header-img").show();
     }
@@ -464,7 +464,7 @@
     /**
      * Reload the markers on the map based on the current search and filtering criteria
      */
-    function loadData() {
+    function loadData () {
         showBusyIndicator();
 
         var query_array = [];
@@ -476,7 +476,7 @@
             makersLayer.setMap(null);
         }
         makersLayer = new google.maps.Data();
-        makersLayer.setStyle(function(feature) {
+        makersLayer.setStyle(function (feature) {
             return {
                 fillColor: feature.getProperty("marker_color"),
                 clickable: true,
@@ -513,7 +513,7 @@
 
         maker_query.include("classification");
         maker_query.find({
-            success: function(resp) {
+            success: function (resp) {
                 for (var i = 0; i < resp.length; i++) {
                     makersLayer.add(makerToFeature(resp[i]));
                 }
@@ -521,13 +521,13 @@
                 setupEventListeners();
                 hideBusyIndicator();
             },
-            failure: function(err) {
+            failure: function (err) {
                 alert("Error loading markers: " + err);
                 hideBusyIndicator();
             }
         });
         asset_query.find({
-            success: function(resp) {
+            success: function (resp) {
                 for (var i = 0; i < resp.length; i++) {
                     makersLayer.add(makerToFeature(resp[i]));
                 }
@@ -535,7 +535,7 @@
                 setupEventListeners();
                 hideBusyIndicator();
             },
-            failure: function(err) {
+            failure: function (err) {
                 alert("Error loading markers: " + err);
                 hideBusyIndicator();
             }
@@ -543,7 +543,7 @@
     }
 
     function setupEventListeners() {
-        makersLayer.addListener('click', function(event) {
+        makersLayer.addListener('click', function (event) {
             var website_description = "";
             if(event.feature.getProperty('website')) {
                 website_description = '<div class="map-website"><p>Website: <a href="'+event.feature.getProperty('website')+'">'+event.feature.getProperty('website')+'</a></p></div>';
@@ -576,7 +576,7 @@
     $('.addResourceMenu').hide();
     initSocialite();
 
-    $(document).ready(function(){
+    $(document).ready(function (){
         $('#maker_address').geocomplete({
             map: map,
             details: ".maker-coordinates",
