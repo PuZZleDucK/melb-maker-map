@@ -193,7 +193,7 @@
     }
 
     /**
-     * 
+     *
      */
     function submitNewMaker () {
         showBusyIndicator();
@@ -246,11 +246,13 @@
         var classQry = new Parse.Query(MakerMap.Model.PrimaryClassification);
         classQry.find({
             success: function (resp) {
-                for (var i = 0; i < resp.length; i++) {
+//                for (var i = 0; i < resp.length; i++) {
+                resp.forEach(function () {
                     var cls = resp[i];
                     filterList.append("<li><label><img width='16' height='16' src='" + getIcon(cls.get("name")) + "' /> " + cls.get("friendlyName") + " <input type='checkbox' class='classification-filter' value='" + cls.id + "' /></label></li>");
                     clsList.append("<option value='" + cls.id + "'>" + cls.get("friendlyName") + "</option>")
-                }
+                });
+//                }
 
                 // Filter
                 filterList.find('input.classification-filter').click(function (e) {
@@ -419,7 +421,7 @@
     function makerToFeature (mkr) {
         var coords = mkr.get("coordinates").toJSON();
         if(mkr.get("classification")) {
-            var marker_classification_symbol = mkr.get("classification").get("name")            
+            var marker_classification_symbol = mkr.get("classification").get("name")
         }
         var obj = {
             id: mkr.id,
@@ -496,7 +498,7 @@
             maker_description_query.contains("description", search_string);
             asset_title_query.contains("title", search_string);
             asset_description_query.contains("description", search_string);
-            
+
             maker_query = Parse.Query.or(maker_title_query, maker_description_query);
             asset_query = Parse.Query.or(asset_title_query, asset_description_query);
         }
@@ -551,7 +553,7 @@
             infoWindow.setContent(
                 '<div class="mapDescription"><h3>'+event.feature.getProperty('title')+'</h3>'+
                 '<p>'+event.feature.getProperty('description')+'</p>'+
-                '<p>' + website_description + '</p>' + 
+                '<p>' + website_description + '</p>' +
                 '</div>'
             );
             var anchor = new google.maps.MVCObject();
