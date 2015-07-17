@@ -247,10 +247,9 @@
         classQry.find({
             success: function (resp) {
 //                for (var i = 0; i < resp.length; i++) {
-                resp.forEach(function () {
-                    var cls = resp[i];
+                resp.forEach(function (cls) {
                     filterList.append("<li><label><img width='16' height='16' src='" + getIcon(cls.get("name")) + "' /> " + cls.get("friendlyName") + " <input type='checkbox' class='classification-filter' value='" + cls.id + "' /></label></li>");
-                    clsList.append("<option value='" + cls.id + "'>" + cls.get("friendlyName") + "</option>")
+                    clsList.append("<option value='" + cls.id + "'>" + cls.get("friendlyName") + "</option>");
                 });
 //                }
 
@@ -271,10 +270,10 @@
         var mtQuery = new Parse.Query(MakerMap.Model.MaterialType);
         mtQuery.find({
             success: function (resp) {
-                for (var i = 0; i < resp.length; i++) {
-                    var mt = resp[i];
+//                for (var i = 0; i < resp.length; i++) {
+                resp.forEach(function (mt) {
                     mtTypes.append("<option value='" + mt.id + "'>" + mt.get("name") + "</option>");
-                }
+                });
             },
             failure: function (err) {
                 alert("An error occurred loading material types: " + error);
