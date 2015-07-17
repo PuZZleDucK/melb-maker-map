@@ -324,7 +324,7 @@
                 var $tooltip;
                 var self = this;
                 $tooltip = $('<div>');
-                $tooltip.addClass('nav-tooltip')
+                $tooltip.addClass('nav-tooltip');
                 $tooltip.html($el.find('img').attr('alt'));
                 $el.on('click', function () {
                     self.hide(0);
@@ -383,7 +383,7 @@
         $newAssetForm.submit(function () {
             submitNewAsset();
             return false;
-        })
+        });
 
         initLookups();
 
@@ -420,7 +420,7 @@
     function makerToFeature (mkr) {
         var coords = mkr.get("coordinates").toJSON();
         if(mkr.get("classification")) {
-            var marker_classification_symbol = mkr.get("classification").get("name")
+            var marker_classification_symbol = mkr.get("classification").get("name");
         }
         var obj = {
             id: mkr.id,
@@ -446,10 +446,12 @@
         }
         var relPart = "img/markers/" + symbolName + ".png";
         //HACK: Should be a better way to get the URL base of index.html
-        if (window.location.pathname.indexOf("index.html") >= 0)
+        if (window.location.pathname.indexOf("index.html") >= 0) {
             return window.location.pathname.replace("index.html", relPart);
-        else
+        }
+        else {
             return relPart;
+        }
     }
 
     function showBusyIndicator () {
