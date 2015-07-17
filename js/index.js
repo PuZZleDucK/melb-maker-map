@@ -283,11 +283,11 @@
         var btQuery = new Parse.Query(MakerMap.Model.BusinessType);
         btQuery.find({
             success: function (resp) {
-                for (var i = 0; i < resp.length; i++) {
-                    var bt = resp[i];
+//                for (var i = 0; i < resp.length; i++) {
+                resp.forEach(function (bt) {
                     bTypes.append("<option value='" + bt.id + "'>" + bt.get("name") + "</option>");
                     btBusy.remove();
-                }
+                });
             },
             failure: function (err) {
                 alert("An error occurred loading business types: " + error);
@@ -515,9 +515,10 @@
         maker_query.include("classification");
         maker_query.find({
             success: function (resp) {
-                for (var i = 0; i < resp.length; i++) {
-                    makersLayer.add(makerToFeature(resp[i]));
-                }
+//                for (var i = 0; i < resp.length; i++) {
+                resp.forEach(function (x) {
+                    makersLayer.add(makerToFeature(x));
+                });
                 makersLayer.setMap(map);
                 setupEventListeners();
                 hideBusyIndicator();
@@ -529,9 +530,10 @@
         });
         asset_query.find({
             success: function (resp) {
-                for (var i = 0; i < resp.length; i++) {
-                    makersLayer.add(makerToFeature(resp[i]));
-                }
+//                for (var i = 0; i < resp.length; i++) {
+                resp.forEach(function(x) {
+                    makersLayer.add(makerToFeature(x));
+                });
                 makersLayer.setMap(map);
                 setupEventListeners();
                 hideBusyIndicator();
