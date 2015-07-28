@@ -20,7 +20,7 @@ Now the local preview is avaliable at: http://localhost:8080/ or check the outpu
 Note: this is assuming node_modules is under the project root.
 
 ### Working on The Maker Network
-If changing the .css files the script "build.sh" must be run to update compressed .css files, otherwise changes will noot be visible.
+If changing the css, edit the /less/*.less files then run the script "build.sh" to update compressed .css files, otherwise changes will noot be visible.
 
 ### Credits
 The origional Maker Map was created by Justin Hileman / hwstartup:
